@@ -1,4 +1,6 @@
-﻿from gtts import gTTS
+﻿from deep_translator import GoogleTranslator
+from wsgiref.types import InputStream
+from gtts import gTTS
 import os
 
 def text_to_mp3(input_file, language_code, output_file="output.mp3"):
@@ -23,11 +25,90 @@ def text_to_mp3(input_file, language_code, output_file="output.mp3"):
     except Exception as e:
         print(f"❌ Error: {e}")
 
+def text_to_mp3(input_str, lang, output_file):
+    try:
+        tts = gTTS(text=input_str, lang=lang)
+        tts.save(output_file)
+        print(f"✅ MP3 file saved as: {output_file}")
+    except Exception as e:
+        print(f"❌ Error: {e}")
+
 # Example usage:
 # Supported languages: https://cloud.google.com/translate/docs/languages
 # e.g., 'en' = English, 'hu' = Hungarian, 'de' = German, 'fr' = French
 
+def read_textfile_byline(filename):
+    """
+    Reads a text file line by line and returns a list of strings.
+
+    :param filename: Path to the text file
+    :return: List of strings (each line without newline characters)
+    """
+    lines = []
+    try:
+        with open(filename, "r", encoding="utf-8") as file:
+            lines = [line.rstrip("\n") for line in file]
+    except FileNotFoundError:
+        print(f"❌ Error: File '{filename}' not found.")
+    except Exception as e:
+        print(f"⚠️ Error reading file: {e}")
+
+    return lines
+
+def append_binfile(target_file, source_file):
+    """
+    Appends the contents of source_file to target_file in binary mode.
+
+    :param target_file: The destination binary file (will be appended to)
+    :param source_file: The source binary file to append
+    """
+    try:
+        with open(source_file, "rb") as src, open(target_file, "ab") as dst:
+            while chunk := src.read(4096):
+                dst.write(chunk)
+        print(f"✅ Appended '{source_file}' to '{target_file}' successfully.")
+    except FileNotFoundError as e:
+        print(f"❌ File not found: {e.filename}")
+    except Exception as e:
+        print(f"⚠️ Error: {e}")
+
+def translate_text_en_to_hun(input_text):
+
+    # Perform translation
+    result = GoogleTranslator(src_lang ='en', dest_lang='hu').translate(input_text)
+
+    # Output the translated text
+    print(f"Original text: {input_text}")
+    print(f"Translated text: {result}")
+    return result
+
+# Example usage
+# python E:\Work\GitHub\_MyGit\PythonText2MP3\Python\text_to_mp3.py
+# E:\Work\GitHub\_MyGit\PythonText2MP3\TextInput\text1_eng.txt
+# E:\Work\GitHub\_MyGit\PythonText2MP3\Result\text1_hu.txt
 if __name__ == "__main__":
+    filename_en = input("Enter eng text file name (e.g. eng.txt): ").strip()
+    filename_hu = input("Enter hun text file name (e.g. hun.txt): ").strip()
+    result_en = read_textfile_byline(filename_en)
+    result_hu = read_textfile_byline(filename_hu)
+    list_en=[]
+    for i, line_en in enumerate(result_en, start=1):
+        list_en.append(line_en)
+    list_hu=[]
+    for i, line_hu in enumerate(result_hu, start=1):
+        list_hu.append(line_hu)
+
+    print("✅ Lines read from file:")
+    for i in range(len(list_en)):
+        print(f"{i:03d}: {list_en[i]} - {list_hu[i]}")
+        fn_en = f"output_en_{i:03d}.mp3"
+        fn_hu = f"output_hu_{i:03d}.mp3"
+        text_to_mp3(list_en[i], 'en', fn_en)
+        text_to_mp3(list_hu[i], 'hu', fn_hu)
+        append_binfile(f"output.mp3", fn_en)
+        append_binfile(f"output.mp3", fn_hu)
+
+if __name__ == "__main1__":
     input_file = input("Enter text file name (e.g. text.txt): ").strip()
     language = input("Enter language code (e.g. en, hu, de): ").strip()
     output_file = input("Enter output mp3 file name (default: output.mp3): ").strip() or "output.mp3"

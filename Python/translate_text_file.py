@@ -32,27 +32,50 @@ def translate_text_file(input_file, src_lang, dest_lang, output_file="translated
     except Exception as e:
         print(f"❌ Translation failed: {e}")
 
-def translate_text(input_text, src_lang, dest_lang):
+def translate_text_en_to_hun(input_text):
 
     # Perform translation
-    result = GoogleTranslator(src_lang ='en', dest_lang='hu').translate(input_text)
+    result = GoogleTranslator('en', 'hu').translate(input_text)
 
     # Output the translated text
     print(f"Original text: {input_text}")
     print(f"Translated text: {result}")
     return result
 
+# Example usage:
+# Supported languages: https://cloud.google.com/translate/docs/languages
+# e.g., 'en' = English, 'hu' = Hungarian, 'de' = German, 'fr' = French
+
+def read_textfile_byline(filename):
+    """
+    Reads a text file line by line and returns a list of strings.
+
+    :param filename: Path to the text file
+    :return: List of strings (each line without newline characters)
+    """
+    lines = []
+    try:
+        with open(filename, "r", encoding="utf-8") as file:
+            lines = [line.rstrip("\n") for line in file]
+    except FileNotFoundError:
+        print(f"❌ Error: File '{filename}' not found.")
+    except Exception as e:
+        print(f"⚠️ Error reading file: {e}")
+
+    return lines
+
+# python E:\Work\GitHub\_MyGit\PythonText2MP3\Python\translate_text_file.py
+# E:\Work\GitHub\_MyGit\PythonText2MP3\TextInput\text1_eng.txt
+
 if __name__ == "__main__":
  
-    # input_file = input("Enter input text file name (e.g. input.txt): ").strip()
-    # src_lang = input("Enter source language code (e.g. hu, en, de): ").strip()
-    # dest_lang = input("Enter destination language code (e.g. en, hu, fr): ").strip()
-    # output_file = input("Enter output file name (default: translated.txt): ").strip() or "translated.txt"
-    #
-    # translate_text_file(input_file, src_lang, dest_lang, output_file)
-    input_text = "Hello, how are you?"
-    translated2 = GoogleTranslator(source='en', target='hu').translate(input_text)
-    print(f"Translated: {translated2}");
-
-    translated3 = translate_text (input_text, 'en', 'hu');
-    print(f"translate_text: {translated3}");
+    filename_in = input("Enter input text file name (e.g. input.txt): ").strip()
+    filename_out = input("Enter output text file name (e.g. output.txt): ").strip()
+    result = read_textfile_byline(filename_in)
+    print("✅ Lines read from file:")
+    fo = open(filename_out, "a", encoding="utf-8")
+    for i, line in enumerate(result, start=1):
+        print(f"{i:03d}: {line}")
+        result = translate_text_en_to_hun(line)
+        print(f"Translated text2: {result}")
+        fo.write(result + "\n")
