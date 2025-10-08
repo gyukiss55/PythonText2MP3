@@ -83,7 +83,7 @@ def translate_text_en_to_hun(input_text):
     print(f"Translated text: {result}")
     return result
 
-def convert_to_mp3 (filename_en, filename_hu):
+def convert_to_mp3 (filename_en, filename_hu, long_pause, short_pause):
     result_en = read_textfile_byline(filename_en)
     result_hu = read_textfile_byline(filename_hu)
     list_en=[]
@@ -100,8 +100,11 @@ def convert_to_mp3 (filename_en, filename_hu):
         fn_hu = f"output_hu_{i:03d}.mp3"
         text_to_mp3(list_en[i], 'en', fn_en)
         text_to_mp3(list_hu[i], 'hu', fn_hu)
+        append_binfile(f"output.mp3", long_pause)
         append_binfile(f"output.mp3", fn_hu)
+        append_binfile(f"output.mp3", short_pause)
         append_binfile(f"output.mp3", fn_en)
+    append_binfile(f"output.mp3", long_pause)
 
 
 def translate (filename_in, filename_out):
@@ -124,10 +127,12 @@ def translate (filename_in, filename_out):
 # E:\Work\GitHub\_MyGit\PythonText2MP3\Result\text1_hu.txt
 
 if __name__ == "__main__":
-    if len(sys.argv) < 3: 
-      print("Usage: python script.py <input engish file name> <input hungarien file name>") 
+    if len(sys.argv) < 5: 
+      print("Usage: python script.py <input engish file name> <input hungarien file name> <long pause> <short pause>") 
       sys.exit(1) 
     first_argument = sys.argv[1]  
     second_argument = sys.argv[2]  
-    convert_to_mp3(first_argument, second_argument)
+    third_argument = sys.argv[1]  
+    forth_argument = sys.argv[2]  
+    convert_to_mp3(first_argument, second_argument, third_argument, forth_argument)
 
