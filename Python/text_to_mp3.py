@@ -2,6 +2,7 @@
 from wsgiref.types import InputStream
 from gtts import gTTS
 import os
+import sys
 
 def text_to_mp3(input_file, language_code, output_file="output.mp3"):
     # Check if input file exists
@@ -82,13 +83,7 @@ def translate_text_en_to_hun(input_text):
     print(f"Translated text: {result}")
     return result
 
-# Example usage
-# python E:\Work\GitHub\_MyGit\PythonText2MP3\Python\text_to_mp3.py
-# E:\Work\GitHub\_MyGit\PythonText2MP3\TextInput\text1_eng.txt
-# E:\Work\GitHub\_MyGit\PythonText2MP3\Result\text1_hu.txt
-if __name__ == "__main__":
-    filename_en = input("Enter eng text file name (e.g. eng.txt): ").strip()
-    filename_hu = input("Enter hun text file name (e.g. hun.txt): ").strip()
+def convert_to_mp3 (filename_en, filename_hu):
     result_en = read_textfile_byline(filename_en)
     result_hu = read_textfile_byline(filename_hu)
     list_en=[]
@@ -105,12 +100,34 @@ if __name__ == "__main__":
         fn_hu = f"output_hu_{i:03d}.mp3"
         text_to_mp3(list_en[i], 'en', fn_en)
         text_to_mp3(list_hu[i], 'hu', fn_hu)
-        append_binfile(f"output.mp3", fn_en)
         append_binfile(f"output.mp3", fn_hu)
+        append_binfile(f"output.mp3", fn_en)
 
-if __name__ == "__main1__":
-    input_file = input("Enter text file name (e.g. text.txt): ").strip()
-    language = input("Enter language code (e.g. en, hu, de): ").strip()
-    output_file = input("Enter output mp3 file name (default: output.mp3): ").strip() or "output.mp3"
 
-    text_to_mp3(input_file, language, output_file)
+def translate (filename_in, filename_out):
+ 
+    print ("Input file:", filename_in)
+    print ("Output file:", filename_out)
+    result = read_textfile_byline(filename_in)
+    print("✅ Lines read from file:")
+    fo = open(filename_out, "a", encoding="utf-8")
+    for i, line in enumerate(result, start=1):
+        print(f"{i:03d}: {line}")
+        result = translate_text_en_to_hun(line)
+        print(f"Translated text2: {result}")
+        fo.write(result + "\n")
+
+
+# Example usage
+# python E:\Work\GitHub\_MyGit\PythonText2MP3\Python\text_to_mp3.py
+# E:\Work\GitHub\_MyGit\PythonText2MP3\TextInput\text1_eng.txt
+# E:\Work\GitHub\_MyGit\PythonText2MP3\Result\text1_hu.txt
+
+if __name__ == "__main__":
+    if len(sys.argv) < 3: 
+      print("Usage: python script.py <input engish file name> <input hungarien file name>") 
+      sys.exit(1) 
+    first_argument = sys.argv[1]  
+    second_argument = sys.argv[2]  
+    convert_to_mp3(first_argument, second_argument)
+

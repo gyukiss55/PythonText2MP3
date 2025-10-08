@@ -1,8 +1,9 @@
+begin
 anglus
 woven
 refined
 particular
-instictively
+instinctively
 relating
 disgust
 spread
@@ -97,3 +98,4 @@ disastrous
 chatty
 attend
 cosmopolitant
+end

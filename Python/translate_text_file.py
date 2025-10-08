@@ -1,5 +1,6 @@
 from deep_translator import GoogleTranslator
 import os
+import sys
 
 def translate_text_file(input_file, src_lang, dest_lang, output_file="translated.txt"):
     # Check if file exists
@@ -66,11 +67,10 @@ def read_textfile_byline(filename):
 
 # python E:\Work\GitHub\_MyGit\PythonText2MP3\Python\translate_text_file.py
 # E:\Work\GitHub\_MyGit\PythonText2MP3\TextInput\text1_eng.txt
-
-if __name__ == "__main__":
+def translate (filename_in, filename_out):
  
-    filename_in = input("Enter input text file name (e.g. input.txt): ").strip()
-    filename_out = input("Enter output text file name (e.g. output.txt): ").strip()
+    print ("Input file:", filename_in)
+    print ("Output file:", filename_out)
     result = read_textfile_byline(filename_in)
     print("✅ Lines read from file:")
     fo = open(filename_out, "a", encoding="utf-8")
@@ -79,3 +79,13 @@ if __name__ == "__main__":
         result = translate_text_en_to_hun(line)
         print(f"Translated text2: {result}")
         fo.write(result + "\n")
+
+
+
+if __name__ == "__main__":
+    if len(sys.argv) < 3: 
+      print("Usage: python script.py <input_text_file> <output_text_file>") 
+      sys.exit(1) 
+    first_argument = sys.argv[1]  
+    second_argument = sys.argv[2]  
+    translate(first_argument, second_argument)
